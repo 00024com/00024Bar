@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "V0.00024 ",
+  "version": "1",
+  "permissions": ["tabs", "activeTab", "scripting", "sidePanel", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "action": {
+    "default_title": "Open Predator Side Panel"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

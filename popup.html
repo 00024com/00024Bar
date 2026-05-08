@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      /* နက်မှောင်တဲ့ အပြာရင့်နောက်ခံ (Deep Navy) */
+      background: #0f172a; 
+      color: #94a3b8;
+      font-family: 'Consolas', monospace; 
+      width: 100%; 
+      margin: 0; 
+      padding: 10px;
+    }
+    .header { 
+      text-align: center; 
+      padding: 5px; 
+      /* Header Line ကို မှင်တောင်အပြာဖျော့လေး ပြောင်းထားတယ် */
+      border-bottom: 1px solid #38bdf8; 
+      margin-bottom: 10px; 
+      color: #38bdf8;
+    }
+    .menu-bar { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .menu-item { 
+      background: #1e293b; 
+      color: #7dd3fc; 
+      border: 1px solid #334155; 
+      padding: 4px 6px; 
+      cursor: pointer; 
+      font-size: 11px; 
+      border-radius: 4px; 
+      flex-grow: 1; 
+      text-align: center; 
+      transition: 0.2s;
+    }
+    .menu-item:hover { 
+      /* Hover လုပ်ရင် မှင်တောင်အပြာ တောက်တောက်လေး ဖြစ်သွားမယ် */
+      background: #38bdf8; 
+      color: #0f172a; 
+    }
+    .url-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    textarea { 
+      width: 100%; 
+      height: 80px; 
+      background: #1e293b; 
+      
+      color: #38bdf8; 
+      border: 1px solid #334155; 
+      padding: 8px; 
+      font-size: 13px; 
+      resize: vertical; 
+      outline: none;
+    }
+    textarea:focus {
+      border-color: #38bdf8;
+    }
+    .tool-buttons { display: flex; gap: 5px; }
+    .action-btn { 
+      flex: 1; 
+      background: #1e293b; 
+      color: #38bdf8; 
+      border: 1px solid #38bdf8; 
+      padding: 8px; 
+      cursor: pointer; 
+      border-radius: 4px; 
+      font-weight: bold; 
+      transition: 0.2s;
+    }
+    .action-btn:hover { 
+      background: #38bdf8; 
+      color: #0f172a; 
+    }
+    .panel { 
+      display: none; 
+      flex-wrap: wrap; 
+      gap: 4px; 
+      background: #1e293b; 
+      padding: 8px; 
+      border: 1px solid #334155; 
+      margin-top: 5px; 
+      border-radius: 4px; 
+    }
+    /* Tooltip styling */
+.quick-btn { position: relative; }
+.quick-btn:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #38bdf8;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #38bdf8;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+
+.menu-item.active {
+    background-color: #38bdf8 !important; /* မှင်တောင်အပြာ */
+    color: #000 !important; /* စာသားကို အမည်းရောင်ပြောင်း (ကြည့်ကောင်းအောင်) */
+    font-weight: bold;
+    box-shadow: 0 0 10px #38bdf8;
+}
+    .status-area { 
+      background: #1e293b; 
+      border: 1px solid #334155; 
+      padding: 8px; 
+      margin-top: 10px; 
+      font-size: 10px; 
+      
+      color: #7dd3fc; 
+    }
+  </style>
+</head>
+<body>
+<div class="header"><h3>0.00024 v1</h3></div>
+<div class="menu-bar">
+  <div class="menu-item" id="menu_sql">BASIC</div>
+  <div class="menu-item" id="menu_union">UNION</div>
+  <div class="menu-item" id="menu_wafunion">WAFuNiON</div>
+  <div class="menu-item" id="menu_waf">WAF</div>
+  <div class="menu-item" id="menu_mysqldios">MySqlDIOS</div>
+  <div class="menu-item" id="menu_postgredios">PostgreSQL</div>
+  <div class="menu-item" id="menu_localdios">LocDIOs</div>
+  <div class="menu-item" id="menu_mssql">MsSQL</div>
+  <div class="menu-item" id="menu_error">ERROR</div>
+  <div class="menu-item" id="menu_xss">XSS</div>
+  <div class="menu-item" id="menu_lfi">LFI</div>
+  <div class="menu-item" id="menu_nosql">NOSQl</div>
+  <div class="menu-item" id="menu_ssrf">SSRF</div>
+  <div class="menu-item" id="menu_ssrf_rce">SsrfRCE</div>
+  <div class="menu-item" id="menu_ssti">SSTi</div>
+  <div class="menu-item" id="menu_blind">Blind</div>
+  <div class="menu-item" id="menu_replace">Replace</div>
+ </div>
+<div class="url-area">
+  <textarea id="url_box" placeholder="URL Target..."></textarea>
+  <div class="tool-buttons">
+    <button class="action-btn" id="btn_load">📥 LOAD</button>
+	<button class="action-btn" id="btn_split">✂ SPLIT</button>
+    <button class="action-btn" id="btn_execute">▶ EXECUTE</button>
+	</div>
+	<div class="input-group">
+    <textarea id="post_box" placeholder="POST Data (e.g. user=admin&pass=123)"></textarea>
+</div>
+<button id="btn_execute_post" class="exec-btn">Execute POST</button>
+</div>
+<button class="small-btn" id="btn_enc_url">URL</button>
+<button class="small-btn" id="btn_dec_url">D-URL</button>
+<button class="small-btn" id="btn_enc_hex">0xHEX</button>
+<button class="small-btn" id="btn_dec_hex">D-HEX</button>
+<button class="small-btn" id="btn_enc_b64">B64</button>
+<button class="small-btn" id="btn_dec_b64">D-B64</button>
+<button class="small-btn" id="btn_reverse">Reverse</button>
+<div id="sql_panel" class="panel"></div>
+<div id="union_panel" class="panel"></div>
+<div id="wafunion_panel" class="panel"></div>
+<div id="error_panel" class="panel"></div>
+<div id="waf_panel" class="panel"></div>
+<div id="mysqldios_panel" class="panel"></div>
+<div id="postgredios_panel" class="panel"></div>
+<div id="localdios_panel" class="panel"></div>
+<div id="mssql_panel" class="panel"></div>
+<div id="nosql_panel" class="panel"></div>
+<div id="ssrf_panel" class="panel"></div>
+<div id="ssrf_rce_panel" class="panel"></div>
+<div id="ssti_panel" class="panel"></div>
+<div id="xss_panel" class="panel"></div>
+<div id="lfi_panel" class="panel"></div>
+<div id="blind_panel" class="panel"></div>
+<div id="replace_panel" class="panel" style="display:none;"></div>
+<div id="headers_panel" class="panel" style="display:none;"></div>
+<div class="status-area" id="status">Engine Ready.</div>
+<script src="popup.js"></script>
+</body>
+</html>
